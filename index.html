@@ -1,1 +1,243 @@
-Hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazeyka</title>
+    <style>
+        /* Base styles and monochrome animated fluid background */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            /* Top alignment prevents the container from shifting upwards when expanding */
+            align-items: flex-start; 
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #121212, #222222);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Dark Liquid Glass container */
+        .glass-container {
+            width: 100%;
+            max-width: 650px;
+            /* Fixed top margin locks the upper border in place */
+            margin-top: 10vh; 
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(25px) saturate(0%);
+            -webkit-backdrop-filter: blur(25px) saturate(0%);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6),
+                        inset 0 0 20px rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            color: #ffffff;
+            transition: max-height 0.4s ease; 
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 35px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main sections list layout */
+        .sections-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .project-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main category button style */
+        .main-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.02),
+                        0 4px 15px rgba(0, 0, 0, 0.3);
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            user-select: none;
+        }
+
+        .main-link:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05),
+                        0 8px 20px rgba(0, 0, 0, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Indicator arrow transitions */
+        .main-link::after {
+            content: '→';
+            font-size: 1.1rem;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .has-sub .main-link::after {
+            content: '▼';
+            font-size: 0.8rem;
+        }
+
+        .has-sub.active .main-link::after {
+            transform: rotate(-180deg);
+            color: #ffffff;
+        }
+
+        /* Submenu container handling smooth height animation */
+        .subsection {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-left: 15px;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease, 
+                        margin 0.3s ease;
+        }
+
+        /* Active visibility properties for dropdown content */
+        .has-sub.active .subsection {
+            max-height: 500px; 
+            opacity: 1;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        /* Inner dropdown links styling */
+        .sub-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .sub-link:hover {
+            color: rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            padding-left: 22px;
+        }
+
+        .sub-link::after {
+            content: '↳';
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .sub-link:hover::after {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        <h1>Lazeyka</h1>
+        <p class="subtitle">Repositories and subpages</p>
+        
+        <ul class="sections-list">
+
+            <!-- Section with sub-items (requires "has-sub" class and a div tag for the main title) -->
+            <li class="project-section has-sub">
+                <div class="main-link">Project One: Complex Ecosystem</div>
+                <ul class="subsection">
+                    <li><a href="https://github.io" target="_blank" class="sub-link">Live Demo (GitHub Pages)</a></li>
+                    <li><a href="https://github.com" target="_blank" class="sub-link">Documentation / Wiki</a></li>
+                    <li><a href="https://github.com" target="_blank" class="sub-link">Releases & Downloads</a></li>
+                </ul>
+            </li>
+
+            <!-- Another section with sub-items -->
+            <li class="project-section has-sub">
+                <div class="main-link">Project Two: Web Application</div>
+                <ul class="subsection">
+                    <li><a href="https://github.com" target="_blank" class="sub-link">Open Issues</a></li>
+                    <li><a href="https://github.com" target="_blank" class="sub-link">Setup Guide (README)</a></li>
+                </ul>
+            </li>
+
+            <!-- Single standalone section (no "has-sub" class, uses direct anchor tag link) -->
+            <li class="project-section">
+                <a href="https://github.com/lazeyka/hoverboard/blob/main/README.md" target="_blank" class="main-link">
+                    Hoverboard
+                </a>
+            </li>
+
+        </ul>
+    </div>
+
+    <script>
+        // Interactive handler for expanding and collapsing submenus
+        document.querySelectorAll('.project-section.has-sub .main-link').forEach(button => {
+            button.addEventListener('click', () => {
+                const currentSection = button.parentElement;
+                currentSection.classList.toggle('active');
+                
+                // Optional: Closes other opened submenus when a new one is selected
+                document.querySelectorAll('.project-section.has-sub').forEach(section => {
+                    if (section !== currentSection) {
+                        section.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
